@@ -1,0 +1,42 @@
+# Commands Run in CMD
+
+
+# Check required files exist in Vina folder:
+
+# (1) vina.exe, (2) vina_split.exe, (3) config.txt, (4) receptor.pdbqt, (5) ligand.pdbqt
+
+C:\Vina>dir  
+
+
+# Run docking (single ligand)
+
+cd C:\Vina
+vina.exe --config conf.txt
+vina.exe --config conf.txt --out out.pdbqt
+vina.exe --config conf.txt > log.txt
+vina.exe --config conf.txt --out out-10modes.pdbqt > log.txt
+
+
+
+# For multiple ligands in batch
+
+cd Vina mkdir Results
+for %f in (Ligands_pdbqt\*.pdbqt) do vina --receptor model-5-MMP-2-7jox.pdbqt --ligand "%f" --config conf.txt --out Results\%~nf-out.pdbqt > Results\%~nf-log.txt
+
+
+
+# Split best docking poses (vina_split)
+
+vina_split_1.2.7_win.exe --input Results\4_Cefoperazone-out.pdbqt
+vina_split_1.2.7_win.exe --input Results\LigA-out.pdbqt --output Results\LigA_pose_
+vina_split_1.2.7_win.exe --input Results\LigB-out.pdbqt --output Results\LigB_pose_
+vina_split_1.2.7_win.exe --input Results\LigC-out.pdbqt --output Results\LigC_pose_
+
+
+
+# PyMOL commands — to create complex of protein + ligand
+
+load C:\Vina\receptor.pdb, protein
+load C:\Vina\Results\5_Ceftazidime-out_ligand_01.pdb, ligand
+create complex, protein or ligand
+save C:\Vina\Results\5_Ceftazidime_complex.pdb, complex

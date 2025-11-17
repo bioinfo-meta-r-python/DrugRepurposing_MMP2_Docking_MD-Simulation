@@ -1,0 +1,19 @@
+# Config.txt - for Single Ligand
+
+receptor = model_5_MMP_2_7jox.pdbqt
+ligand = 3D_COMPOUND_CID_5362065.pdbqt
+
+center_x = 52.313
+center_y = 95.088
+center_z = 25.747
+
+size_x = 26
+size_y = 26
+size_z = 26
+
+exhaustiveness = 8
+num_modes = 10
+energy_range = 3
+
+out = out-10modes.pdbqt
+cpu = 4

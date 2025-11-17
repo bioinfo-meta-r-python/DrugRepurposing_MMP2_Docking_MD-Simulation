@@ -1,0 +1,9 @@
+Ligand,PubChem_ID,Docking_Score_kcal/mol,Selected_for_Complex
+Cefixime,5362065,-6.353,No
+Cefditoren,9870843,-6.355,No
+Ceftibuten,5282242,-6.584,No
+Cefoperazone,44187,-7.061,Yes
+Ceftazidime,5481173,-6.691,No
+Cefpodoxime,6335986,-5.868,No
+Cefotaxime,5742673,-6.303,No
+Ceftizoxime,6533629,-6.996,No

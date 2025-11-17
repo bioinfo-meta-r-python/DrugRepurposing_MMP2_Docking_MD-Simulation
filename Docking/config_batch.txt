@@ -1,0 +1,18 @@
+# Config.txt - for Multiple Ligands (Batch Docking)
+
+receptor = model-5-MMP-2-7jox.pdbqt
+
+center_x = 56.542
+center_y = -49.033
+center_z = 15.482
+
+size_x = 26
+size_y = 26
+size_z = 26
+
+exhaustiveness = 8
+num_modes = 10
+energy_range = 3
+
+out = out-10modes.pdbqt
+cpu = 4
