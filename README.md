@@ -63,8 +63,8 @@ Plots exported from iMODS:
 ---
 
 ## 📂 Repository Structure
-
-```MMP2_DrugRepurposing/
+```
+MMP2_DrugRepurposing/
 │
 ├── README.md
 ├── Docking_Results.docx # Full detailed report
@@ -97,8 +97,8 @@ Plots exported from iMODS:
         ├── eigenvalue.png
         ├── covariance.png
         ├── elastic_network.png
-        └── model.pdb```
-
+        └── model.pdb
+```
 ---
 
 ## 🔹 Key Takeaways
