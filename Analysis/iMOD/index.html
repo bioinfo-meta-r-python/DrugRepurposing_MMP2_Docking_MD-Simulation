@@ -1,0 +1,398 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>iModS</title>
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.css">
+<link rel="stylesheet" href="/css/corner.css">
+
+
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/jquery.form.min.js"></script>
+
+<META NAME="robots" CONTENT="noindex">
+<meta charset="utf-8">
+
+<!-- <script type="text/javascript" src="/jsmol/jquery/jquery.js"></script> -->
+
+<script type="text/javascript" src="/jsmol/js/JSmoljQueryExt.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolCore.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolApplet.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolApi.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolControls.js"></script>
+<script type="text/javascript" src="/jsmol/js/j2sjmol.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmol.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolThree.js"></script>
+<script type="text/javascript" src="/jsmol/js/JSmolGLmol.js"></script>
+
+<script type="text/javascript" src="index_template.js"></script>
+
+<style>
+html, body { 
+   font-size: 10pt; 
+   margin:0; 
+/* height:100%; width:100%; */
+   }
+
+hr {
+   color: #3D7BAD; 
+   background-color: #3D7BAD; 
+   border-color: #3D7BAD; 
+   border:1px solid #3D7BAD; 
+   margin-top:0.2em; 
+   margin-bottom:0.2em;
+   }
+
+.video_controls {
+   color:#CCCCCC;
+   }
+
+/* To Hide default input type 'number' up/down arrows*/
+/* For chrome, Safari, Edge, Opera */
+form input[type='number']::-webkit-outer-spin-button,
+form input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For firefox */
+input[type=number]{
+    -moz-appearance: textfield;
+}
+
+</style>
+
+<!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="/font-awesome/css/font-awesome.css">
+
+</head>
+
+
+<body>
+
+<table style="width:100%; height:100%;"> 
+<tr>
+	<td align="center" bgcolor="#f7f7f7" valign=middle height=30>
+		<strong> 
+		<script type="text/javascript">
+		if(form_jobname != "")
+			document.write("\"" + form_jobname + "\" ");
+		document.write("ID " + form_jobid + "<br>(CG=");
+		if(cg==0) { document.write("CA"); }
+		else if(cg==1) { document.write("C5"); }
+		else if(cg==2) { document.write("HA"); }
+		document.write(" ENM=");
+		if(enm==0) { document.write("Sigmoid"); }
+		else if(enm==1) { document.write("Tirion"); }
+		else if(enm==2) { document.write("Hinsen"); }
+		else if(enm==4) { document.write("edNMA"); }
+		if(cut>0) { document.write(" c=" + cut); }
+		if(fix>0 || fix=="SS") { document.write(" Fix=" + fix); }
+		if(deform>0) { document.write(" Deform=ON"); }
+		document.write(")");
+		</script>
+		</strong>
+	</td>
+	<td align=right>&nbsp;
+		<i class="icon-external-link icon-2x" onclick="popup();" title="Open into a new window"></i>
+	</td>
+</tr>
+<tr>
+	<!-- THIS WORKS PERFECT WITH JAVA AND HTML5 !!! -->
+<!--	<td align="center" style="height:100%;"> -->
+<!--	<td style="height:100%;"> -->
+<!--	<td width=100% style="-min-height:500px; -max-height:600px;"> -->
+
+<!--	<td width=100% height=100%> -->
+	<td width=100% height=100% style="vertical-align:top;"> <!-- This works with all browsers... -->
+		<div id=resizer style="height:620px; width:100%; position:relative; display:table; overflow:hidden; left:0px; top:0px;">  <!-- "display:table" is needed by HTML5 (not by JAVA) -->
+		<div style="position:absolute; overflow:hidden; left:0px; top:0px; width:100%; height:100%;">  <!-- This is needed by HTML5 (not by JAVA) -->
+			<script type="text/javascript">
+				// alert('style.height=' + document.getElementById('JmolPane').style.height);
+				jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);		// DO NOT change 100%
+				fasterOnOff(true); // Anti-alias disabled by default
+			</script>
+		</div>
+		</div>
+	</td>
+	<td align=right width=165> <!-- WIDTH needed here for IE -->
+		<table id="output" border="0" cellspacing="0" cellpadding="0" width=165> <!-- Setting some cell width is mandatory! -->
+		<tr>
+			<td>
+			<form name="jmol_form" onsubmit="return false;"> <!-- submission disabled! -->
+
+<!--
+			<fieldset>
+				<legend style="size: -2"> JSmol</legend>
+				 <a href=index.html?USE=HTML5>HTML5</a>&nbsp;
+				 <a href=index.html?USE=WEBGL>WebGL</a> 
+				 <a href=index.html?USE=JAVA>[Java]</a>&nbsp;
+			</fieldset>
+-->
+
+			<fieldset style="text-align:left;">
+				<legend style="size: -2"> Visualize </legend>
+				&nbsp;Mode
+				<select name="mode" id="selectmode" onchange="selectMode();">
+				<script>
+					auto_options(1,rmodes,1);
+				</script>
+				</select>
+				<br>
+				<input type="checkbox" name="arrows" id="arrows_check" onclick="enableArrows(this.checked)">Arrow field 
+				<br>
+				<input type="checkbox" name="carrows" id="carrows_check" onclick="enableClusterArrows(this.checked)">Affine-arrows 
+			</fieldset>
+
+			<fieldset>
+				<legend style="size: -2"> Animation </legend>
+				<table width="100%">
+					<tr>
+						<td width=20%>
+							<i class="icon-off icon-large" id="anim_checkbox" style="color:red"></i>
+						</td>
+						<td title="Amplitude factor [0.1-20]">
+							Amp<input type="number" name="ampli" id="ampli" value="1.0" min=0.1 max=20 step=0.1 placeholder="1.0" style="width: 27px;" onchange="this.value = minmaxInt(this.value, 0.1, 20, 0.1)">
+						</td>
+						<td title="Frames Per Second [1-25]">
+							FPS<input type="number" name="fps" id="fps" value="10" min=1 max=25 step=1 placeholder="10" style="width: 20px;" onchange="this.value = minmaxInt(this.value, 1, 25, 1); setFPS(this.value);">
+						</td>
+					</tr>
+				</table>
+				<table class="video_controls" width="100%">
+					<tr>
+						<td>
+							<i class="icon-fast-backward" onclick="first();"></i>
+						</td>
+						<td>
+							<i class="icon-backward" onclick="prev();"></i>
+						</td>
+						<td>
+							<i class="icon-play" onclick="play();"></i>
+						</td>
+						<td>
+							<i class="icon-pause" onclick="pause();"></i>
+						</td>
+						<td>
+							<i class="icon-forward" onclick="next();"></i>
+						</td>
+						<td>
+							<i class="icon-fast-forward" onclick="last();"></i>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+
+			<fieldset>
+				<legend style="size: -2"> Color by </legend>
+				<input type="radio" name="compare" value="clusters" id="comp_clust" onclick="setFile(this.value);">Clusters
+				<select name="clusters" id="showcluster" onchange="showClusters(); showClustersArrows();">
+				<script>
+					auto_options(2,rmodes,2);
+				</script>
+				</select>
+				<br>
+				<script>
+					showDeform2(); // Shows de Deformability/Mobility-related input fields... (if necessary!)
+					uncheckDeform(); // Unchecks Deformability/Mobility-related radio buttons
+					uncheckCluster(); // Unchecks Clustering-related radio buttons
+				</script>
+
+				<input type="radio" name="compare" value="chain" id="comp_chain" onclick="setFile(this.value)">Chain 
+				<input type="radio" name="compare" value="SS" id="comp_bfact" onclick="setFile(this.value)">SS<br>
+				<input type="radio" name="compare" value="CPK" id="comp_cpk" onclick="setFile(this.value)">CPK
+				<input type="radio" name="compare" value="Hydro" id="comp_hydro" onclick="setFile(this.value)">Hydro
+			</fieldset>
+
+			<fieldset>
+				<legend style="size: -2"> Representation </legend>
+				<input type="radio" name="display" id="disp_trace" onclick="dis_trace()" checked> Trace 
+				<select name="trace_width" id="Wtrace" onchange="setTrace();">
+				   <option value = "0.1" > 0.1 </option>
+				   <option value = "0.2" > 0.2 </option>
+				   <option value = "0.3" > 0.3 </option>
+				   <option value = "0.4" selected> 0.4</option>
+				   <option value = "0.5" > 0.5 </option>
+				   <option value = "0.6" > 0.6 </option>
+				   <option value = "0.7" > 0.7 </option>
+				   <option value = "0.8" > 0.8 </option>
+				   <option value = "0.9" > 0.9 </option>
+				   <option value = "1.0" > 1.0 </option>
+				</select>
+				<br>
+				<input type="radio" name="display" id="disp_cart" onclick="dis_cartoons()"> Cartoon
+				<input type="checkbox" name="fancy" id="fancy" onclick="fancyOnOff(this.checked)">Fncy
+				<br>
+				<input type="radio" name="display" id="disp_cpk" onclick="dis_cpk()"> Spacefill
+				<br>
+				<input type="radio" name="display" id="disp_wire" onclick="dis_wire()"> Wireframe
+				<br>
+				<input type="radio" name="display" id="disp_ballstick" onclick="dis_ballstick()"> Ball&Stick
+			</fieldset>
+
+			<fieldset>
+				<legend style="size: -2"> Display </legend>
+				<input type="checkbox" name="spinning" id="spinning" checked="checked" onclick="spinOnOff(this.checked)">Spin off<br>
+				<input type="checkbox" name="faster" id="faster" checked="checked" onclick="fasterOnOff(this.checked)">Anti-alias off
+				<table width="100%" >
+					<tr align=center>
+						<td>
+							<i class="icon-camera" onclick="Jmol.script(jmolApplet0,'write PNGJ jmol.png');" title="Take a snapshot"></i>
+						</td>
+						<td>
+							<i class="icon-film" onclick="Jmol.script(jmolApplet0,'script trajectorymovie.jmol');" title="Generate movie frames"></i>
+						</td>
+						<td>
+							<i class="icon-refresh" onclick="jmol_reset();" title="Reset view"></i>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			</form>
+
+			<form id="animate" method="post">
+			    <input type="hidden" name="jobid">
+			    <input type="hidden" name="nmode">
+			    <input type="hidden" name="cg">
+			    <input type="hidden" name="fix">
+			    <input type="hidden" name="ampli">
+			</form>
+			</td>
+		</tr>
+		</table>
+	</td>
+</tr>
+<!-- Warning messages DO NOT REMOVE! -->
+<tr height=30>
+	<td colspan=2 style="font-weight:bold; font-size:1.2em; color:#333333;">
+		<i class="icon-minus-sign icon-large" id=collapse_moreinfo onclick="collapseByClass(this,'moreinfo');" title="Collapse/Expand panels"></i>
+		More information
+		<hr>
+	</td>
+</tr>
+<script>
+	showDeform(); // Shows de Deformability/Mobility results... (if necessary!)
+</script>
+
+<tr valign="top" class="moreinfo">
+	<td colspan="2" align="justify" style="display:table-cell;">
+		<fieldset>
+			<legend style="size: -2">
+				<i class="icon-minus-sign" onclick="collapseById(this,'plot_eval');"></i>
+				Eigenvalues 
+			</legend>
+			<p id="plot_eval" width=100%>
+			The eigenvalue associated to each normal mode represents the motion stiffness. Its value is directly related to the energy required to deform the structure. The lower the eigenvalue, the easier the deformation.
+			<br>
+			<img src="eval.jpg" title="Eigenvalues" style="height:100%; max-height:300px; width:100%; max-width:600px;">
+			</p>
+		</fieldset>
+	</td>
+</tr>
+
+<tr valign="top" class="moreinfo">
+	<td colspan="2" align="justify" style="display:table-cell;">
+		<fieldset>
+			<legend style="size: -2">
+				<i class="icon-minus-sign" onclick="collapseById(this,'plot_var');"></i>
+				Variance
+			</legend>
+			<p id="plot_var" width=100%>
+			The variance associated to each normal mode is inversely related to the eigenvalue. Colored bars show the individual (red) and cummulative (green) variances.
+			<br>
+			<img src="var.jpg" title="Variance" style="height:100%; max-height:300px; width:100%; max-width:600px;">
+			</p>
+		</fieldset>
+	</td>
+</tr>
+
+<tr valign="top" class="moreinfo">
+	<td colspan="2" align="justify" style="display:table-cell;">
+		<fieldset>
+			<legend style="size: -2">
+				<i class="icon-minus-sign" onclick="collapseById(this,'plot_covar');"></i>
+				Covariance map 
+			</legend>
+			<p id="plot_covar" width=100%>
+			Covariance matrix indicates coupling between pairs of residues, i.e. whether they experience correlated (red), uncorrelated (white) or anti-correlated (blue) motions.
+			<br>
+			<img src="covar.jpg" title="Covariance matrix" style="height:100%; max-height:600px; width:100%; max-width:600px;"><br>
+			The correlation matrix is computed using the C&alpha; Cartesian coordinates and the equation 2 in: Ichiye T, Karplus M. Collective Motions in Proteins: a Covariance Analysis of Atomic Fluctuations in Molecular-Dynamics and Normal Mode Simulations. Proteins 11 205-217 (1991).
+			</p>
+		</fieldset>
+	</td>
+</tr>
+
+<tr valign="top" class="moreinfo">
+	<td colspan="2" align="justify" style="display:table-cell;">
+		<fieldset>
+			<legend style="size: -2">
+				<i class="icon-minus-sign" onclick="collapseById(this,'plot_en');"></i>
+				Elastic network 
+			</legend>
+			<p id="plot_en" width=100%>
+			The elastic network model defines which pairs of atoms are connected by springs. Each dot in the graph represents one spring between the corresponding pair of atoms. Dots are colored according to their stiffness, the darker grays indicate stiffer springs and vice versa.
+			<br>
+			<img src="en.jpg" title="Elastic network" style="height:100%; max-height:600px; width:100%; max-width:600px;">
+			</p>
+		</fieldset>
+	</td>
+</tr>
+
+<tr class="moreinfo">
+	<td colspan="2" bgcolor="white">
+		<fieldset>
+			<legend style="size: -2">
+				<i class="icon-minus-sign" onclick="collapseById(this,'files');"></i>
+				Download Files
+			</legend>
+		<table id="files" border="0" bordercolor="#000000" cellpadding="1" cellspacing="1">
+			<tr>
+				<td align="center" bgcolor="#dedede">Description  </td>
+				<td align="center" bgcolor="#dedede">Format       </td>
+				<td align="center" bgcolor="#dedede">Filename     </td>
+			</tr>		
+			<tr>
+				<td>Deformability/Mobility tabulated data </td>
+				<td>ASCII</td>
+				<td><A href="imode_defmob.txt" target="_blank">imode_defmob.txt</A></td>
+			</tr>
+			<tr>
+				<td bgcolor="#eaeaea">Deformability C-alpha (temperature field)</td>
+				<td bgcolor="#eaeaea">PDB </td>
+				<td bgcolor="#eaeaea"><A href="imode_def.pdb" target="_blank">imode_def.pdb</A></td>
+			</tr>
+			<tr>
+				<td>Mobility C-alpha PDB (temperature field)</td>
+				<td>PDB</td>
+				<td><A href="imode_mob.pdb" target="_blank">imode_mob.pdb</A></td>
+			</tr>
+			<tr >
+				<td bgcolor="#eaeaea">Eigenvectors/values in Internal Coords.</td>
+				<td bgcolor="#eaeaea">ptraj ASCII</td>
+				<td bgcolor="#eaeaea"><A href="imode_ic.evec" target="_blank">imode_ic.evec</A></td>
+			</tr>
+			<tr >
+				<td>Eigenvectors/values in Cartesian Coords.</td>
+				<td>ptraj ASCII</td>
+				<td><A href="imode_cart.evec" target="_blank">imode_cart.evec</A></td>
+			</tr>
+			<tr>
+				<td bgcolor="#eaeaea">Log-file</td>
+				<td bgcolor="#eaeaea">ASCII</td>
+				<td bgcolor="#eaeaea"><A href="logfile.txt" target="_blank">logfile.txt</A></td>
+			</tr>
+			<tr >
+				<td>All computed files</td>
+				<td>TAR + GZIP</td>
+				<td> <script>linkfile("job"+form_jobid+".tgz");</script> </td>
+			</tr>
+		</table>
+		</fieldset>                                       
+	</td>
+</tr>
+
+</table>
+
+</body>
+</html>
+
