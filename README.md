@@ -139,7 +139,7 @@ https://journals.umt.edu.pk/index.php/SIR/article/view/7532
 
 ---
 
-## 🙏 Feedback
+## Feedback
 Your **reads, critical feedback, and citations** are greatly appreciated and help amplify the impact of this work. 
 
 ---
